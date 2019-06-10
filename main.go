@@ -96,7 +96,6 @@ type cacheControlWriter struct {
 
 func (w *cacheControlWriter) WriteHeader(code int) {
 	content_type := w.Header().Get("Content-Type")
-	fmt.Printf("Content-Type: %s\n", content_type)
 
 	if strings.HasPrefix(content_type, "text/html") {
 		w.Header().Set("Cache-Control", "max-age=3600")
