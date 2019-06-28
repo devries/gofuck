@@ -41,7 +41,10 @@ func main() {
 
 	r.Handle("/*", StaticContentCacher(http.FileServer(http.Dir("static"))))
 
-	http.ListenAndServe(":3333", r)
+	fmt.Printf("Listening on port 3333\n")
+	if err := http.ListenAndServe("localhost:3333", r); err != nil {
+		panic(err)
+	}
 }
 
 func giveFucks(w http.ResponseWriter, r *http.Request) {
@@ -58,19 +61,20 @@ func giveFucks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if numFucks > 1000 {
+	switch {
+	case numFucks > 1000:
 		w.WriteHeader(410)
 		errResponse := errorResponse{"error", "No one has that many fucking fucks to give."}
 		json.NewEncoder(w).Encode(errResponse)
-	} else if numFucks > 20 {
+	case numFucks > 20:
 		w.WriteHeader(410)
 		errResponse := errorResponse{"error", "Out of fucks to give."}
 		json.NewEncoder(w).Encode(errResponse)
-	} else if numFucks < 0 {
+	case numFucks < 0:
 		w.WriteHeader(400)
 		errResponse := errorResponse{"error", "Negative fucks? Are you fucking kidding me? Real cute... asshole."}
 		json.NewEncoder(w).Encode(errResponse)
-	} else {
+	default:
 		fucks := make([]string, numFucks)
 		for i := 0; i < numFucks; i++ {
 			fucks[i] = "fuck"
