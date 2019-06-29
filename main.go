@@ -53,15 +53,11 @@ func giveFucks(w http.ResponseWriter, r *http.Request) {
 	h.Set("Content-Type", "application/json")
 	h.Set("Cache-Control", "no-cache")
 
-	numFucks, err := strconv.Atoi(numFucksString)
-	if err != nil {
+	switch numFucks, err := strconv.Atoi(numFucksString); {
+	case err != nil:
 		w.WriteHeader(400)
 		errResponse := errorResponse{"error", fmt.Sprintf("What the fuck kind of number is %s?", numFucksString)}
 		json.NewEncoder(w).Encode(errResponse)
-		return
-	}
-
-	switch {
 	case numFucks > 1000:
 		w.WriteHeader(410)
 		errResponse := errorResponse{"error", "No one has that many fucking fucks to give."}
